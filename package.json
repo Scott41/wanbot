@@ -1,5 +1,5 @@
 {
-  "name": "discord-wan-bot",
+  "name": "wanbot",
   "version": "1.0.0",
   "description": "twitch tv's Wan Bot brought to Discord",
   "main": "index.js",
@@ -18,9 +18,9 @@
   "author": "Scott41",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Scott41/discord-wan-bot/issues"
+    "url": "https://github.com/Scott41/wanbot/issues"
   },
-  "homepage": "https://github.com/Scott41/discord-wan-bot#readme",
+  "homepage": "https://github.com/Scott41/wanbot#readme",
   "dependencies": {
     "discord.js": "*",
     "moment": "^2.13.0",
