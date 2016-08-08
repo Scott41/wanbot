@@ -1,1 +1,1 @@
-# wanbot
+# discord-wan-bot

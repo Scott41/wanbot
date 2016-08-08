@@ -1,0 +1,34 @@
+{
+  "name": "discord-wan-bot",
+  "version": "1.0.0",
+  "description": "twitch tv's Wan Bot brought to Discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Scott41/discord-wan-bot.git"
+  },
+  "keywords": [
+    "Bot",
+    "Discord",
+    "Wan"
+  ],
+  "author": "Scott41",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Scott41/discord-wan-bot/issues"
+  },
+  "homepage": "https://github.com/Scott41/discord-wan-bot#readme",
+  "dependencies": {
+    "discord.js": "*",
+    "moment": "^2.13.0",
+    "q": "^1.4.1",
+    "request": "^2.72.0",
+    "xml2js": "^0.4.16",
+    "yargs": "^3.29.0",
+    "ytdl-core": "^0.7.16"
+  },
+  "devDependencies": {}
+}
