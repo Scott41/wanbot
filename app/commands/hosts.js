@@ -20,7 +20,7 @@ let hostManager = bot => {
     if (msg.content === '/hosts') {
       let currentHosts = getHosts();
       let response = '';
-      const defaultResponse = `No one has posted an IP in the past ' + ${timeout} + ' minutes. Wan!`;
+      const defaultResponse = `No one has posted an IP in the past ${timeout} minutes. Wan!`;
 
       currentHosts.forEach(host => {
 
