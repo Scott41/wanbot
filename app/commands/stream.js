@@ -34,16 +34,16 @@ let audio = bot => {
 };
 
 function stream(bot, msg) {
-  if (msg.server.id !== HISUICIDE_PACT && msg.server.id !== WTS) {
-    return bot.sendMessage(msg.channel, 'Wan! That command doesn\'t work on the ' + msg.server.name +
+  if (msg.guild.id !== HISUICIDE_PACT && msg.guild.id !== WTS) {
+    return msg.channel.sendMessage('Wan! That command doesn\'t work on the ' + msg.guild.name +
       ' server. Gomennasai!');
   } else if (msg.author.voiceChannel) {
     if (bot.voiceConnection && bot.voiceConnection.voiceChannel !== msg.author.voiceChannel) {
-      return bot.sendMessage(msg.channel, 'Wan! I\'m busy playing audio in another voice channel right now.');
+      return msg.channel.sendMessage('Wan! I\'m busy playing audio in another voice channel right now.');
     } else if (!/(^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$)/.test(msg.content.split(' ')[1])) {
-      return bot.sendMessage(msg.channel, 'Wan! I need a YouTube link to play audio!');
+      return msg.channel.sendMessage('Wan! I need a YouTube link to play audio!');
     } else if (seeking) {
-      return bot.sendMessage(msg.channel, 'Wan! Currently seeking. use `/audio stop` to stop seeking.');
+      return msg.channel.sendMessage('Wan! Currently seeking. use `/audio stop` to stop seeking.');
     }
 
     let url = msg.content.split(' ')[1];
@@ -58,7 +58,7 @@ function stream(bot, msg) {
           moment(arg2, 'h:mm:ss', true).isValid() || moment(arg2, 'hh:mm:ss', true).isValid()) {
         seek = arg2;
       } else {
-        return bot.sendMessage(msg.channel, 'Wan! Wrong timestamp format! (hint: hh:mm:ss)');
+        return msg.channel.sendMessage('Wan! Wrong timestamp format! (hint: hh:mm:ss)');
       }
     } else {
       seek = parseUrlTimestamp(url) || '0';
@@ -68,7 +68,7 @@ function stream(bot, msg) {
       volume: louder ? DEFAULT_VOLUME * 2 : DEFAULT_VOLUME,
       seek
     };
-    
+
     seeking = false;
 
     bot.joinVoiceChannel(msg.author.voiceChannel)
@@ -78,35 +78,35 @@ function stream(bot, msg) {
           if (bot.voiceConnection) {
             bot.voiceConnection.destroy();
           }
-          bot.sendMessage(msg.channel, 'Wan! Error loading audio.');
+          msg.channel.sendMessage('Wan! Error loading audio.');
           console.log('[stopped] stream error');
         });
 
         if(seek !== '0') {
           seeking = true;
           console.log('[starting] seek: ' + seek);
-          bot.sendMessage(msg.channel, 'Seeking...');
+          msg.channel.sendMessage('Seeking...');
         }
         handleAudioStream(bot, msg, stream, options);
       });
 
   } else {
-    bot.sendMessage(msg.channel, 'Wan! ' + msg.author + ', you must be in a voice channel for that command to work.');
+    msg.channel.sendMessage('Wan! ' + msg.author + ', you must be in a voice channel for that command to work.');
   }
 }
 
 function manageAudio(bot, msg, type) {
-  if (msg.server.id !== HISUICIDE_PACT && msg.server.id !== WTS) {
-    return bot.sendMessage(msg.channel, 'Wan! That command doesn\'t work on the ' + msg.server.name +
+  if (msg.guild.id !== HISUICIDE_PACT && msg.guild.id !== WTS) {
+    return msg.channel.sendMessage('Wan! That command doesn\'t work on the ' + msg.guild.name +
       ' server. Gomennasai!');
   } else if (msg.author.voiceChannel && bot.voiceConnection && bot.voiceConnection.voiceChannel &&
     bot.voiceConnection.voiceChannel !== msg.author.voiceChannel) {
-    bot.sendMessage(msg.channel, 'Wan! ' + msg.author +
+    msg.channel.sendMessage('Wan! ' + msg.author +
       ', you must be in **my** voice channel for that command to work.');
   } else if (!msg.author.voiceChannel) {
-    bot.sendMessage(msg.channel, 'Wan! ' + msg.author + ', you must be in a voice channel for that command to work.');
+    msg.channel.sendMessage('Wan! ' + msg.author + ', you must be in a voice channel for that command to work.');
   } else if (!bot.voiceConnection) {
-    bot.sendMessage(msg.channel, 'Wan! ' + msg.author + ', I\'m not currently in a voice channel.');
+    msg.channel.sendMessage('Wan! ' + msg.author + ', I\'m not currently in a voice channel.');
   } else {
     switch (type) {
       case 'down':
@@ -162,7 +162,7 @@ function handleAudioStream(bot, msg, stream, options) {
 
       console.log('[playing] started playing. Volume: ' + bot.voiceConnection.getVolume());
       seeking = false;
-      bot.sendMessage(msg.channel, 'Wan! Started playing audio.');
+      msg.channel.sendMessage('Wan! Started playing audio.');
     })
     .catch(err => {
       console.error(err);
@@ -172,7 +172,7 @@ function handleAudioStream(bot, msg, stream, options) {
 function audioStop(bot, msg) {
   bot.voiceConnection.destroy();
   seeking = false;
-  bot.sendMessage(msg.channel, 'Wan! Stopped playing audio.');
+  msg.channel.sendMessage('Wan! Stopped playing audio.');
 }
 
 function volumeDown(bot, msg) {

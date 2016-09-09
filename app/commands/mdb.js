@@ -21,42 +21,44 @@ module.exports = bot => {
 };
 
 function help(bot, msg) {
-  let list = 'Valid character names (**not case-sensitive**): ' + charList.join(', ');
+  let list = `Valid character names (**not case-sensitive**): ${charList.join(', ')}`;
   let helpMessage = 'Commands (**not case sensitive**):\n/mdb\n/mdb character\n/mdb' +
     ' moon-character\n/mdb moon-character, moon-character';
   let exampleMessage = 'Examples:\n/mdb aoko (picks a random moon)\n/mdb h-white len\n/mdb c-nero, f-kohamech';
 
-  return bot.sendMessage(msg.channel, [helpMessage, '', exampleMessage, '', list]);
+  return msg.channel.sendMessage(`${helpMessage}\n\n${exampleMessage}\n\n${list}`);
 }
 
 function randomVideo(bot, msg) {
   // No args, random video
   mdbService.getRandomVideo((results, err) => {
     if (err) {
-      bot.sendMessage(msg.channel, appConstants.errors.oops);
+      msg.channel.sendMessage(appConstants.errors.oops);
       return console.error(err);
     } else if (!results || typeof results.length === 'undefined') {
-      return bot.sendMessage(msg.channel, appConstants.errors.oops);
+      return msg.channel.sendMessage(appConstants.errors.oops);
     } else if (results.length < 1) {
-      return bot.sendMessage(msg.channel, appConstants.errors.noResults);
+      return msg.channel.sendMessage(appConstants.errors.noResults);
     }
 
     let index = randomNum(results.length);
     let result = results[index];
 
     if (!result.link) {
-      return bot.sendMessage(msg.channel, appConstants.errors.oops);
+      return msg.channel.sendMessage(appConstants.errors.oops);
     }
 
     let vs = vsStringBuilder(result);
-    let time = 'Match starts at **' + parseUrlTimestamp(result.link) + '**';
+    let time = `Match starts at **${parseUrlTimestamp(result.link)}**`;
 
-    bot.sendMessage(msg.channel, result.link).then(() => {
-      bot.sendMessage(msg.channel, time);
-    }).then(() => {
-      bot.sendMessage(msg.channel, vs);
+    msg.channel.sendMessage(result.link)
+      .then(() => {
+        msg.channel.sendMessage(time);
+      })
+      .then(() => {
+        msg.channel.sendMessage(vs);
+      });
     });
-  });
 }
 
 function video(bot, msg) {
@@ -91,7 +93,7 @@ function video(bot, msg) {
         (hasM1 && (!m1 || !c1 || !c2)) ||
         (hasM2 && (!m2 || !c1 || !c2))) {
       console.log(m1, c1, m2, c2);
-      return bot.sendMessage(msg.channel, appConstants.errors.wrongFormat);
+      return msg.channel.sendMessage(appConstants.errors.wrongFormat);
     }
 
     let m1Param = hasM1 ? '&m1=' + m1 : '';
@@ -106,7 +108,7 @@ function video(bot, msg) {
       c1 = convertCharName(params.split('-')[1].trim());
 
       if (!m1 || !c1) {
-        return bot.sendMessage(msg.channel, appConstants.errors.wrongFormat);
+        return msg.channel.sendMessage(appConstants.errors.wrongFormat);
       }
 
       queryParams = 'c1=' + c1 + '&m1=' + m1;
@@ -115,7 +117,7 @@ function video(bot, msg) {
       c1 = convertCharName(params.trim());
 
       if (!c1) {
-        return bot.sendMessage(msg.channel, appConstants.errors.wrongFormat);
+        return msg.channel.sendMessage(appConstants.errors.wrongFormat);
       }
 
       queryParams = 'c1=' + c1;
@@ -134,7 +136,7 @@ function video(bot, msg) {
       let responseName2 = c2IsValid ? '' : '**' + c2 + '**';
       let response = 'Wan! Invalid character name' + pluralize + ': ' + responseName1 + nameDelimeter +
         responseName2 + '. For a list of character names, use the `/mdb help` command.';
-      return bot.sendMessage(msg.channel, response);
+      return msg.channel.sendMessage(response);
     } else {
       return handleVideoRetrieval(bot, msg, queryParams);
     }
@@ -144,7 +146,7 @@ function video(bot, msg) {
     if(!c1IsValid) {
       let response = 'Wan! Invalid character name: **' + c1 +
         '**. For a list of character names, use the `/mdb help` command.';
-      return bot.sendMessage(msg.channel, response);
+      return msg.channel.sendMessage(response);
     } else {
       return handleVideoRetrieval(bot, msg, queryParams);
     }
@@ -222,28 +224,28 @@ function convertToLongMoon(m) {
 function handleVideoRetrieval(bot, msg, queryParams) {
   mdbService.getVideo(queryParams, (results, err) => {
     if (err) {
-      bot.sendMessage(msg.channel, appConstants.errors.oops);
+      msg.channel.sendMessage(appConstants.errors.oops);
       return console.error(err);
     } else if (!results || typeof results.length === 'undefined') {
-      return bot.sendMessage(msg.channel, appConstants.errors.oops);
+      return msg.channel.sendMessage(appConstants.errors.oops);
     } else if (results.length < 1) {
-      return bot.sendMessage(msg.channel, appConstants.errors.noResults);
+      return msg.channel.sendMessage(appConstants.errors.noResults);
     }
 
     let index = randomNum(results.length);
     let result = results[index];
 
     if (!result.link) {
-      return bot.sendMessage(msg.channel, appConstants.errors.oops);
+      return msg.channel.sendMessage(appConstants.errors.oops);
     }
 
     let vs = vsStringBuilder(result);
     let time = 'Match starts at **' + parseUrlTimestamp(result.link) + '**';
 
-    bot.sendMessage(msg.channel, result.link).then(() => {
-      bot.sendMessage(msg.channel, time);
+    msg.channel.sendMessage(result.link).then(() => {
+      msg.channel.sendMessage(time);
     }).then(() => {
-      bot.sendMessage(msg.channel, vs);
+      msg.channel.sendMessage(vs);
     });
   });
 }

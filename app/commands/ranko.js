@@ -8,8 +8,8 @@ let ranko = bot => {
 
     if (msg.content === '/ranko') {
 
-      if (msg.channel.server.id === mbServer && msg.channel.id !== '85002042438848512') {
-        bot.sendMessage(msg.channel, 'Wan! This command can only be used in the #spam-nsfw channel.');
+      if (msg.channel.guild.id === mbServer && msg.channel.id !== '85002042438848512') {
+        msg.channel.sendMessage('Wan! This command can only be used in the #spam-nsfw channel.');
         return;
       }
 
@@ -21,16 +21,16 @@ let ranko = bot => {
           if (result && src && tag) {
             let tagMsg = 'Result for **' + decodeURIComponent(tag) + '**';
             let srcMsg = '**Source:** ' + src;
-            bot.sendMessage(msg.channel, tagMsg + '\n' + srcMsg)
+            msg.channel.sendMessage(tagMsg + '\n' + srcMsg)
               .then(() => {
-                bot.sendMessage(msg.channel, result);
+                msg.channel.sendMessage(result);
               });
           } else {
-            bot.sendMessage(msg.channel, 'Wan! I don\'t know what happened!');
+            msg.channel.sendMessage('Wan! I don\'t know what happened!');
           }
         })
         .catch(err => {
-          bot.sendMessage(msg.channel, err);
+          msg.channel.sendMessage(err);
         });
     }
   });

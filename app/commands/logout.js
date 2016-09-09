@@ -16,13 +16,13 @@ let logout = bot => {
       });
 
       if (!isAdmin) {
-        bot.sendMessage(msg.channel, 'Wan! You are not my master ' + msg.author.username + '-san!');
+        msg.channel.sendMessage(`Wan! You are not my master ${msg.author.username}-san!`);
       } else {
-        bot.sendMessage(msg.channel, 'Wan! My master ' + msg.author.username + '-sama is calling me home. Ja ne!')
+        msg.channel.sendMessage(`Wan! My master ${msg.author.username}-sama is calling me home. Ja ne!`)
           .then(() => {
             bot.logout((err) => {
               if (err) {
-                console.error('ERROR logging out: ' + err);
+                console.error(`ERROR logging out: ${err}`);
               }
               console.warn('Disconnected by the `logout` command.');
               process.exit(0);

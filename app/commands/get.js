@@ -9,8 +9,8 @@ let get = bot => {
 
     if (msg.content.indexOf('/get') === 0) {
 
-      if (msg.channel.server.id === mbServer && msg.channel.id !== '85002042438848512') {
-        return bot.sendMessage(msg.channel, 'Wan! This command can only be used in the #spam-nsfw channel.');
+      if (msg.channel.guild.id === mbServer && msg.channel.id !== '85002042438848512') {
+        return msg.channel.sendMessage('Wan! This command can only be used in the #spam-nsfw channel.');
       }
       //Check for at least 1 argument
       let params = msg.content.replace(/\s+/g, ' ').split(' ');
@@ -18,7 +18,7 @@ let get = bot => {
       if (params[0] !== '/get') {
         return;
       } else if (!params[1]) {
-        return bot.reply(msg, 'Wan! You must enter a tag!');
+        return msg.channel.sendMessage(`${msg.author} Wan! You must enter a tag!`);
       } else {
         getByTag(bot, msg, params);
       }
@@ -45,16 +45,16 @@ function getByTag(bot, msg, params) {
       if (result && src && tag) {
         let tagMsg = 'Result for **' + decodeURIComponent(tagf) + '**';
         let srcMsg = '**Source:** ' + src;
-        bot.sendMessage(msg.channel, tagMsg + '\n' + srcMsg)
+        msg.channel.sendMessage(tagMsg + '\n' + srcMsg)
           .then(() => {
-            bot.sendMessage(msg.channel, result);
+            msg.channel.sendMessage(result);
           });
       } else {
-        bot.sendMessage(msg.channel, 'Wan! I don\'t know what happened!');
+        msg.channel.sendMessage('Wan! I don\'t know what happened!');
       }
     })
     .catch(err => {
-      bot.sendMessage(msg.channel, err);
+      msg.channel.sendMessage(err);
     });
 }
 

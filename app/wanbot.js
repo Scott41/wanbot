@@ -35,7 +35,7 @@ bot.on('disconnected', () => {
   process.exit(0);
 });
 
-bot.loginWithToken(auth.token)
+bot.login(auth.token)
   .then(() => {
     console.log('WANBOT_MODE::' + auth.mode);
     console.log('Wan Bot has logged in successfully.');

@@ -11,8 +11,10 @@ let helpList = [
 let help = bot => {
   bot.on('message', msg => {
 
+    let helpMessage = helpList.join('\n');
+
     if (msg.content === '/help') {
-      bot.sendMessage(msg.channel, helpList);
+      msg.channel.sendMessage(helpMessage);
     }
 
   });

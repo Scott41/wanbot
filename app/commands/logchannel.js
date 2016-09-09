@@ -5,7 +5,7 @@ let logchannel = bot => {
 
     if (msg.content === '/logchannel' && msg.author.username === 'Skiller') {
       console.info(msg.channel.id);
-      bot.sendMessage(msg.channel, 'Successfully logged channel ID. Wan!');
+      msg.channel.sendMessage('Successfully logged channel ID. Wan!');
     }
 
   });
