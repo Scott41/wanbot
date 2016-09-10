@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Scott41/wanbot#readme",
   "dependencies": {
-    "discord.js": "*",
+    "discord.js": "github:hydrabolt/discord.js#indev-old",
     "moment": "^2.13.0",
     "q": "^1.4.1",
     "request": "^2.72.0",
