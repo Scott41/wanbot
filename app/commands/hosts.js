@@ -1,31 +1,32 @@
 'use strict';
 
 const moment = require('moment');
+const _ = require('lodash');
 
-let hosts = [];
-const wbtestchan = '113458312455999488';
-const meltybloodserver = '84627074005884928';
-const wanBotID = '113455053200715776';
+let hosts = {};
 const timeout = '20';
 
 let hostManager = bot => {
   bot.on('message', msg => {
-    if (msg.author.id === wanBotID) {
+    if (msg.author.id === bot.user.id) {
       return;
     }
 
     refreshHostsClock();
     checkForNewHost(msg);
 
-    if (msg.content === '/hosts') {
-      let currentHosts = getHosts();
+    if (msg.content === '/hosts') {      
+      let server = msg.channel.guild.id;
+      let currentHosts = getHosts()[server] || [];
+      let botRecentlyStarted = moment(bot.readyTimestamp) > moment().subtract(parseInt(timeout), 'minutes');
       let response = '';
-      const defaultResponse = `No one has posted an IP in the past ${timeout} minutes. Wan!`;
+      let recentlyStartedMessage = '`Wan! I was recently restarted, so I might be missing some IPs. Gomennasai!`\n';    
+      const defaultResponse = 
+        `${botRecentlyStarted ? recentlyStartedMessage : ''}No one has posted an IP in the past ${timeout} minutes. Wan!`;
 
       currentHosts.forEach(host => {
 
         let timestamp = moment(host.timestamp);
-
         let hostString =
           `[**${timestamp.fromNow()}** in ${host.channelName}] **${host.username}** --> ${host.content}`;
 
@@ -45,22 +46,23 @@ function checkForNewHost(msg) {
   const hostPattern =
     /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):[0-9]{1,5}/g;
   let server = msg.channel.guild.id;
-  if (hostPattern.test(msg.content) &&
-    (server === wbtestchan || server === meltybloodserver)) {
+
+  if (hostPattern.test(msg.content)) {
 
     let content = msg.content;
     let currentHosts = getHosts();
+    currentHosts[server] = currentHosts[server] || [];
 
     if (content.length && content.length > 80) {
       content = msg.content.match(hostPattern);
     }
 
-    if (currentHosts.length >= 15) {
-      deleteHost(0);
+    if (currentHosts[server].length >= 15) {
+      deleteHost(server, 0);
     }
 
-    currentHosts.push({
-      timestamp: msg.timestamp,
+    currentHosts[server].push({
+      timestamp: msg.createdTimestamp,
       channelName: msg.channel.name,
       username: msg.author.username,
       userID: msg.author.id,
@@ -71,15 +73,21 @@ function checkForNewHost(msg) {
 }
 
 function checkForOldHosts() {
-  getHosts().forEach( (host, index) => {
-    if (moment(host.timestamp) < moment().subtract(parseInt(timeout), 'minutes')) {
-      deleteHost(index);
-    }
-  });
+  let hosts = getHosts();
+  if (_.isEmpty(hosts)) {
+    return;
+  }
+  for (let server in hosts) {
+    hosts[server].forEach((host, index) => {
+      if (moment(host.timestamp) < moment().subtract(parseInt(timeout), 'minutes')) {
+        deleteHost(server, index);
+      }
+    });
+  }
 }
 
-function deleteHost(index) {
-  let currentHosts = getHosts();
+function deleteHost(server, index) {
+  let currentHosts = getHosts()[server];
   currentHosts.splice(index, 1);
 }
 

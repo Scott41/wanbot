@@ -5,6 +5,7 @@ let helpList = [
   '/get tag name OR tag_name',
   '/get a, list, of_tags (multiple tags)',
   '/hosts',
+  '/audio help',
   '/mdb help'
 ];
 

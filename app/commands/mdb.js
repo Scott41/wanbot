@@ -132,8 +132,8 @@ function video(bot, msg) {
     if(!c1IsValid || !c2IsValid) {
       let pluralize = !c1IsValid && !c2IsValid ? 's' : '';
       let nameDelimeter = !c1IsValid && !c2IsValid ? ', ': '';
-      let responseName1 = c1IsValid ? '' : '**' + c1 + '**';
-      let responseName2 = c2IsValid ? '' : '**' + c2 + '**';
+      let responseName1 = c1IsValid ? '' : `**${c1}**`;
+      let responseName2 = c2IsValid ? '' : `**${c2}**`;
       let response = 'Wan! Invalid character name' + pluralize + ': ' + responseName1 + nameDelimeter +
         responseName2 + '. For a list of character names, use the `/mdb help` command.';
       return msg.channel.sendMessage(response);
@@ -144,8 +144,8 @@ function video(bot, msg) {
     let c1IsValid = isCharNameValid(c1);
 
     if(!c1IsValid) {
-      let response = 'Wan! Invalid character name: **' + c1 +
-        '**. For a list of character names, use the `/mdb help` command.';
+      let response =
+        `Wan! Invalid character name: **${c1}**. For a list of character names, use the \`/mdb help\` command.`;
       return msg.channel.sendMessage(response);
     } else {
       return handleVideoRetrieval(bot, msg, queryParams);
@@ -240,7 +240,7 @@ function handleVideoRetrieval(bot, msg, queryParams) {
     }
 
     let vs = vsStringBuilder(result);
-    let time = 'Match starts at **' + parseUrlTimestamp(result.link) + '**';
+    let time = `Match starts at **${parseUrlTimestamp(result.link)}**`;
 
     msg.channel.sendMessage(result.link).then(() => {
       msg.channel.sendMessage(time);
@@ -269,8 +269,8 @@ function randomNum(length) {
 function vsStringBuilder(mdbObj) {
   let char1moon = convertToShortMoon(mdbObj.moon1);
   let char2moon = convertToShortMoon(mdbObj.moon2);
-  let builtString = char1moon + '-' + mdbObj.character1 + ' (' + mdbObj.player1 + ') vs. ' +
-    char2moon + '-' + mdbObj.character2 + ' (' + mdbObj.player2 + ')';
+  let builtString =
+    `${char1moon}-${mdbObj.character1} (${mdbObj.player1}) vs. ${char2moon}-${mdbObj.character2} (${mdbObj.player2})`;
 
   return builtString;
 }
