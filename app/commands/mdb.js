@@ -251,11 +251,15 @@ function handleVideoRetrieval(bot, msg, queryParams) {
 function isCharNameValid(name) {
   let isValid = false;
 
-  charList.forEach(char => {
-    if (name.toLowerCase() === char.toLowerCase()) {
-      return isValid = true;
-    }
-  });
+  if (name.toLowerCase() === 'mech-hisui') {
+    isValid = true;
+  } else {
+    charList.forEach(char => {
+      if (name.toLowerCase() === char.toLowerCase()) {
+        return isValid = true;
+      }
+    });
+  }
 
   return isValid;
 };
