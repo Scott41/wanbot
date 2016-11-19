@@ -162,7 +162,10 @@ function handleAudioStream(bot, msg, connection, stream, options) {
   let server = connection.channel.guild.id;
 
   dispatcher.on('start', () => {
-    setCurrentlyPlaying(server, true);    
+    // setTimeout(() => {
+    //   setCurrentlyPlaying(server, true);
+    // }, 2000);
+        
     msg.channel.sendMessage('Wan! started playing audio.');
   });
 
@@ -175,22 +178,24 @@ function handleAudioStream(bot, msg, connection, stream, options) {
   });
 
   dispatcher.on('end', () => {
-    setCurrentlyPlaying(server, false);
+    // setCurrentlyPlaying(server, false);
 
-    setTimeout(() => {
-      if (!isCurrentlyPlaying(server)) {        
-        connection.disconnect();
+    // setTimeout(() => { 
+    //   if (!isCurrentlyPlaying(server)) {        
+    //     connection.disconnect();
         console.log(`Finished playing audio in ${msg.channel.name}`);
-      }      
-    }, 1000);
+    //   }      
+    // }, 5000);
   });
 }
 
 function isCurrentlyPlaying(server) {
+  console.log(`isCurrentlyPlaying: ${server}, ${currentlyPlaying[server]}`);
   return currentlyPlaying[server] ? true : false;
 }
 
 function setCurrentlyPlaying(server, state) {
+  console.log(`setCurrentlyPlaying: ${server}, ${state}`);
   currentlyPlaying[server] = state; 
 }
 
