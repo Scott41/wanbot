@@ -160,12 +160,11 @@ function setConnectionListeners(bot, msg, connection) {
 function handleAudioStream(bot, msg, connection, stream, options) {
   const dispatcher = connection.playStream(stream, options);
   let server = connection.channel.guild.id;
+  let session = new Date().getTime();
+  
+  setCurrentlyPlaying(server, session);
 
-  dispatcher.on('start', () => {
-    // setTimeout(() => {
-    //   setCurrentlyPlaying(server, true);
-    // }, 2000);
-        
+  dispatcher.on('start', () => {    
     msg.channel.sendMessage('Wan! started playing audio.');
   });
 
@@ -177,26 +176,23 @@ function handleAudioStream(bot, msg, connection, stream, options) {
     console.error(`Error in audio stream: ${err}`);
   });
 
-  dispatcher.on('end', () => {
-    // setCurrentlyPlaying(server, false);
-
-    // setTimeout(() => { 
-    //   if (!isCurrentlyPlaying(server)) {        
-    //     connection.disconnect();
-        console.log(`Finished playing audio in ${msg.channel.name}`);
-    //   }      
-    // }, 5000);
+  dispatcher.on('end', () => {  
+    console.log(`Finished playing audio in ${msg.channel.name} from session ${session} on server ${server}`);
+    setTimeout(() => {
+      if (isCurrentlyPlaying(server, session)) {        
+        connection.disconnect();
+        msg.channel.sendMessage('Wan! finished playing audio.');
+      }
+    }, 1000);
   });
 }
 
-function isCurrentlyPlaying(server) {
-  console.log(`isCurrentlyPlaying: ${server}, ${currentlyPlaying[server]}`);
-  return currentlyPlaying[server] ? true : false;
+function isCurrentlyPlaying(server, session) {
+  return currentlyPlaying[server] === session;
 }
 
-function setCurrentlyPlaying(server, state) {
-  console.log(`setCurrentlyPlaying: ${server}, ${state}`);
-  currentlyPlaying[server] = state; 
+function setCurrentlyPlaying(server, session) {
+  currentlyPlaying[server] = session;
 }
 
 function audioStop(connection) {
@@ -213,19 +209,19 @@ function volumeDown(connection) {
 
 function volumeUp(connection) {
   let dispatcher = connection.player.dispatcher;
-  dispatcher.setVolume(dispatcher.volume + VOLUME_INCREMENT);  
+  dispatcher.setVolume(dispatcher.volume + VOLUME_INCREMENT);
   console.log(`[playing] current volume: ${dispatcher.volume}`);
 }
 
 function volumeReset(connection) {
   let dispatcher = connection.player.dispatcher;
-  dispatcher.setVolume(DEFAULT_VOLUME);  
+  dispatcher.setVolume(DEFAULT_VOLUME);
   console.log(`[playing] current volume: ${dispatcher.volume}`);
 }
 
 function volumeMute(connection) {
   let dispatcher = connection.player.dispatcher;
-  dispatcher.setVolume(0);  
+  dispatcher.setVolume(0);
   console.log(`[playing] current volume: ${dispatcher.volume}`);
 }
 
