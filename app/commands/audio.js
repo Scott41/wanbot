@@ -90,10 +90,10 @@ function stream(bot, msg) {
     return msg.channel.sendMessage('Wan! I need a YouTube link to play audio!');
   }
 
-  let url = msg.content.split(' ')[1];
+  let url = msg.content.split(' ')[1];  
   let stream = ytdl(url, {
     filter: 'audioonly'
-  });
+  });  
   let arg2 = msg.content.split(' ')[2];
   let seek = '0';
   if (arg2 && arg2 !== '--loud') {
