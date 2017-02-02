@@ -32,8 +32,8 @@ let ImageService = () => {
                 try {
                   parseString(body, (err, json) => {
                     let post = json.posts.post[0].$;
-                    result = post.file_url;
-                    srcUrl = 'http://gelbooru.com/index.php?page=post&s=view&id=' + post.id;
+                    result = `https:${post.file_url}`;
+                    srcUrl = 'https://gelbooru.com/index.php?page=post&s=view&id=' + post.id;
                   });
                 } catch(err) {
                   console.error(err);
