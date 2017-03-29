@@ -1,10 +1,10 @@
 'use strict';
 
-const http = require('http');
+const https = require('https');
 const q = require('q');
 const parseString = require('xml2js').parseString;
 const errors = require('../constants/appConstants').errors;
-const baseUrl = 'http://gelbooru.com/index.php?page=dapi&s=post&q=index&';
+const baseUrl = 'https://gelbooru.com/index.php?page=dapi&s=post&q=index&';
 
 let ImageService = () => {
 
@@ -20,7 +20,7 @@ let ImageService = () => {
     getPageParam(tag)
       .then(pageNum => {
         let reqUrl = baseUrl + tagQuery + tag + '&' + pageQuery + pageNum + '&limit=1';
-        http.get(reqUrl, response => {
+        https.get(reqUrl, response => {
             let body = '';
             response.on('data', d => {
               body += d;
@@ -35,7 +35,7 @@ let ImageService = () => {
                     result = `https:${post.file_url}`;
                     srcUrl = 'https://gelbooru.com/index.php?page=post&s=view&id=' + post.id;
                   });
-                } catch(err) {
+                } catch (err) {
                   console.error(err);
                   return deferred.reject(errors.oops);
                 }
@@ -48,7 +48,7 @@ let ImageService = () => {
                 }
 
               })
-              .on('error', err =>  {
+              .on('error', err => {
                 console.error(err);
                 return deferred.reject(err);
               });
@@ -75,7 +75,7 @@ let ImageService = () => {
   function getPageParam(tag) {
     let deferred = q.defer();
 
-    http.get(baseUrl + 'tags=' +tag + '&limit=1', res => {
+    https.get(baseUrl + 'tags=' + tag + '&limit=1', res => {      
       let body = '';
       res.on('data', d => {
         body += d;
@@ -84,8 +84,8 @@ let ImageService = () => {
 
           let count;
           // Check that res can be parsed
-          try {
-            parseString(body, (err, json) => {
+          try {            
+            parseString(body, (err, json) => {              
               count = json.posts.$.count;
             });
           } catch (err) {
