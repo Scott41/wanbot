@@ -37,7 +37,7 @@ function getByTag(bot, msg, params) {
     params[index] = param;
   });
   let formattedTag = params.join(', ');
-  let searchTag = params.join('+');
+  let searchTag = `${params.join('+')}+-loli+-shota`;
 
   imageService.getByTagName(searchTag, formattedTag)
     .spread((result, src, tag, tagf) => {
