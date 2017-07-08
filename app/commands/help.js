@@ -2,9 +2,9 @@
 
 let helpList = [
   'Wan! These are the commands you can give me:',
-  '/get tag name OR tag_name',
-  '/get a, list, of_tags (multiple tags)',
   '/hosts',
+  '/safe',
+  '/gel',
   '/audio help',
   '/mdb help'
 ];

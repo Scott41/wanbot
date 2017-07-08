@@ -4,7 +4,8 @@ const https = require('https');
 const q = require('q');
 const parseString = require('xml2js').parseString;
 const errors = require('../constants/appConstants').errors;
-const baseUrl = 'https://gelbooru.com/index.php?page=dapi&s=post&q=index&';
+const baseUrlGel = 'https://gelbooru.com/index.php?page=dapi&s=post&q=index&';
+const baseUrlSafe = 'https://safebooru.org/index.php?page=dapi&s=post&q=index&';
 
 let ImageService = () => {
 
@@ -12,14 +13,14 @@ let ImageService = () => {
     getByTagName
   };
 
-  function getByTagName(tag, tagf) {
+  function getByTagName(tag, tagf, safe) {
     let deferred = q.defer();
     let formattedTag = tagf || '';
     let tagQuery = 'tags=';
     let pageQuery = 'pid=';
-    getPageParam(tag)
+    getPageParam(tag, safe)
       .then(pageNum => {
-        let reqUrl = baseUrl + tagQuery + tag + '&' + pageQuery + pageNum + '&limit=1';
+        let reqUrl = (safe ? baseUrlSafe : baseUrlGel) + tagQuery + tag + '&' + pageQuery + pageNum + '&limit=1';
         https.get(reqUrl, response => {
             let body = '';
             response.on('data', d => {
@@ -33,7 +34,7 @@ let ImageService = () => {
                   parseString(body, (err, json) => {
                     let post = json.posts.post[0].$;
                     result = `https:${post.file_url}`;
-                    srcUrl = 'https://gelbooru.com/index.php?page=post&s=view&id=' + post.id;
+                    srcUrl = `https://${safe ? 'safebooru.org' : 'gelbooru.com'}/index.php?page=post&s=view&id=${post.id}`;
                   });
                 } catch (err) {
                   console.error(err);
@@ -72,10 +73,10 @@ let ImageService = () => {
     return deferred.promise;
   }
 
-  function getPageParam(tag) {
+  function getPageParam(tag, safe) {
     let deferred = q.defer();
 
-    https.get(baseUrl + 'tags=' + tag + '&limit=1', res => {      
+    https.get((safe ? baseUrlSafe : baseUrlGel) + 'tags=' + tag + '&limit=1', res => {
       let body = '';
       res.on('data', d => {
         body += d;
@@ -84,8 +85,8 @@ let ImageService = () => {
 
           let count;
           // Check that res can be parsed
-          try {            
-            parseString(body, (err, json) => {              
+          try {
+            parseString(body, (err, json) => {
               count = json.posts.$.count;
             });
           } catch (err) {
