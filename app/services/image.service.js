@@ -33,7 +33,7 @@ let ImageService = () => {
                 try {
                   parseString(body, (err, json) => {
                     let post = json.posts.post[0].$;
-                    result = `https:${post.file_url}`;
+                    result = `${safe ? 'https:' : ''}${post.file_url}`;
                     srcUrl = `https://${safe ? 'safebooru.org' : 'gelbooru.com'}/index.php?page=post&s=view&id=${post.id}`;
                   });
                 } catch (err) {
