@@ -22,17 +22,19 @@
   },
   "homepage": "https://github.com/Scott41/wanbot#readme",
   "dependencies": {
-    "bufferutil": "^3.0.0",
+    "@discordjs/uws": "^10.149.0",
+    "bufferutil": "^4.0.1",
     "discord.js": "^11.0.0",
-    "erlpack": "github:hammerandchisel/erlpack",
+    "erlpack": "github:discordapp/erlpack",
+    "libsodium-wrappers": "^0.7.6",
     "lodash": "^4.16.4",
     "moment": "^2.13.0",
-    "node-opus": "^0.2.4",
+    "node-opus": "^0.2.9",
+    "opusscript": "0.0.6",
     "q": "^1.4.1",
     "request": "^2.72.0",
     "xml2js": "^0.4.17",
     "yargs": "^3.29.0",
-    "ytdl-core": "^0.29.2"
-  },
-  "devDependencies": {}
+    "ytdl-core": "^1.0.0"
+  }
 }
